@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>Detect incognito mode</title>
+    </head>
+    <body>
+        <h1>Is In Incognito Mode : <span id="is_incognito"></span></h1>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript">
+            async function isIncognitoMode() {
+                if ('storage' in navigator && 'estimate' in navigator.storage) {
+                    let {_, quota} = await navigator.storage.estimate();
+                    let quotaInMib = Math.round( quota / (1024 * 1024)); 
+                    let memorySizeinMib = Math.round(navigator.deviceMemory*1024);
+                    let quotaUpperLimitForIncognito = Math.round(memorySizeinMib*0.1);
+                    if(quotaInMib < quotaUpperLimitForIncognito) return true
+                    else return false;
+                    }
+                }
+            
+                function executor(){
+                    isIncognitoMode()
+                    .then(isPrivate => {
+                        if (isPrivate) $("#is_incognito").html("True")
+                        else $("#is_incognito").html("False")
+                    })
+                }
+                $(document).ready(function(){
+                    executor();
+                    });
+        </script>
+    </body>
+</html>
